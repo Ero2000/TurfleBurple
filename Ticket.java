@@ -19,4 +19,18 @@ public class Ticket implements Comparable {
         this.priority = priority;
         this.ID = ID;
     }
+
+    //Accessors
+    public int getID(){
+	return ID;
+    }
+    public double getPriority(){
+	return priority;
+    }
+    public String getUsername(){
+	return username;
+    }
+    public String getDesc(){
+	return problemDescription;
+    }
 }
