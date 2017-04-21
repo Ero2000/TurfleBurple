@@ -14,11 +14,13 @@ public class Ticket implements Comparable {
     private double priority;
     private int ID;
 
-    public Ticket(String username, String priority, int ID) {
+    public Ticket(String username, double priority, int ID, String problemDescription) {
         this.username = username;
+	this.problemDescription = problemDescription;
         this.priority = priority;
         this.ID = ID;
     }
+
 
     //Accessors
     public int getID(){
@@ -32,5 +34,10 @@ public class Ticket implements Comparable {
     }
     public String getDesc(){
 	return problemDescription;
+    }
+
+    //WIP
+    public int compareTo(Object x){
+	return 0;
     }
 }
