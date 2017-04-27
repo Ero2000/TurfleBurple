@@ -38,6 +38,8 @@ public class Ticket implements Comparable {
 
     //WIP
     public int compareTo(Object x){
-	return 0;
+	if (this.getPriority() > x.getPriority())
+	    return 1;
+	return -1;
     }
 }
