@@ -36,7 +36,24 @@ public class Ticket implements Comparable {
 	return problemDescription;
     }
 
-    //WIP
+    //mutators
+    public void setID(int x){
+	ID = x;
+    }
+
+    public void setPriority(double x){
+	priority = x;
+    }
+
+    public void setUsername(String x){
+	username = x;
+    }
+
+    public void setDesc(String x){
+	problemDescription = x;
+    }
+
+    //compareTo() compares priorities
     public int compareTo(Object x){
 	if (this.getPriority() > x.getPriority())
 	    return 1;
