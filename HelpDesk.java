@@ -25,20 +25,22 @@ public class HelpDesk {
 	    //services.put("rebootOpSystem", SERVICE.REBOOT_OS);
     }
 
-    public Ticket createTicket(String username, double priority, String problemDescription) {
+    public static Ticket createTicket(String username, double priority, String problemDescription) {
         Ticket retTicket = new Ticket(username, priority, lastID, problemDescription);
 	    lastID++;
         return retTicket;
     }
 
-       private String inputString(String prompt) {
+    private String inputString(String prompt) {
         System.out.print("\n" + prompt + " ");
-        return sc.next(); 
+        return sc.nextLine(); 
     }
     
     private int inputInt(String prompt) {
         System.out.print("\n" + prompt + " ");
-        return sc.nextInt(); 
+        int result = sc.nextInt(); 
+        sc.nextLine(); // consume newline leftover
+        return result;
     }
 
     // Returns true/false for a yes/no prompt
@@ -57,6 +59,7 @@ public class HelpDesk {
                 System.out.println(options[i] + " (" + (i+1) + ")");
             }
             result = sc.nextInt();
+            sc.nextLine(); // consume newline leftover
             if (result == -1) System.out.println("Please pick a valid number");
         }
         return result;
@@ -94,36 +97,62 @@ public class HelpDesk {
         }        
     }
 
-    // Gos through questions. Returns the final problem
-    private String prompt() {
-        String name = inputString("What is your name?");
-        String problem = inputString("Describe your problem:");
+    // Gos through questions. Returns the priority
+    private double prompt() {
         if (!inputYN("Is your device plugged in?")) {
-            return "Plug it in";
+            System.out.println("Plug it in");
+            return 0.01;
         }
         if (!inputYN("Did you turn it on?")) {
-            return "Turn it on. Push the on button dummy";
+            System.out.println("Turn it on. Push the on button dummy");
+            return 0.01;
         }
         if ( inputOptions("What is your OS?", "Linux", "Windows", "Mac OSX", "Other") != 1) {
-            return "Get a better OS";
+            System.out.println("Get a better OS");
+            return 0.1;
         }
         if (!inputYN("Are you able to log in?")) {
             if (!inputYN("Do you have a user account setup?")) {
                 callService(SERVICE.DISPATCH_TECH); 
-                return "";
+                return 10;
             }
             if (!inputYN("Do you know your password?")) {
                 callService(SERVICE.PASSWORD_RESET);
-                return "";
+                return 8;
             }
-            return "Welp you're screwed";
+            System.out.println("Welp you're screwed");
+            return 0.1;
         }
-        return "We couldn't find anything wrong. Geeet ouuta heere";    
+        System.out.println("\nWe couldn't find anything wrong. Geeet ouuta heere");    
+        return 0;
     }
 
     public static void main(String[] args) {
+        ArrayPriorityQueue ticketQueue = new ArrayPriorityQueue();
         HelpDesk desk = new HelpDesk();
-        System.out.println("Final Diagnosis: " + desk.prompt()); 
+        
+        boolean running = true;
+        while (running) {
 
+            String name = desk.inputString("What is your name?");
+            String problem = desk.inputString("Describe your problem:");
+            double priority = desk.prompt();
+            
+            Ticket ticket = createTicket(name, priority, problem);
+            ticketQueue.add(ticket);
+            if (!desk.inputYN("Would you like to add another problem?")) {
+                running = false;
+            }
+        }
+        System.out.println("FULL TICKET LIST: " );
+        while(!ticketQueue.isEmpty()) {
+            Ticket current = (Ticket)ticketQueue.removeMin();
+            System.out.println("\n######TICKET " + current.getID() + "#####");
+            System.out.println("name: " + current.getUsername());
+            System.out.println("problem description: " + current.getDesc());
+            System.out.println("priority: " + current.getPriority());
+            System.out.println("##################");
+        }
+        System.out.println("\n\n\n Thank you for using HelpDesk!");
     }
 }
