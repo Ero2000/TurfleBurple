@@ -38,7 +38,7 @@ public class Ticket implements Comparable {
 
     //WIP
     public int compareTo(Object x){
-	if (this.getPriority() > x.getPriority())
+	if (this.getPriority() > ((Ticket)x).getPriority())
 	    return 1;
 	return -1;
     }
